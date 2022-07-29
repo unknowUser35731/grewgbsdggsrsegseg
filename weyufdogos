@@ -197,10 +197,12 @@ local text_transfer_elements = gui.Text(groubox_elements, '\n')
 --@endregion
 
 --get degug errors
+local names_list = http.Get("https://raw.githubusercontent.com/unknowUser35731/grewgbsdggsrsegseg/main/opwekfopkasdpfkvp")
+
 local function checkUserName()
 	local user_name = cheat.GetUserName()
 
-	return string.find(http.Get("https://raw.githubusercontent.com/unknowUser35731/grewgbsdggsrsegseg/main/opwekfopkasdpfkvp"), user_name)
+	return string.find(names_list, user_name)
 end
 
 local function decode_string(string)
@@ -239,27 +241,26 @@ local function decode_string(string)
 	return table.concat(num, "")
 end
 
-local first_parsing = false
-local error = 0 
+local start_time = globals.RealTime()
 
 local function parseErrors()
-	if not first_parsing then
-		if not checkUserName() then
-			error = 1 
-		elseif (globals.RealTime() - decode_string(_fb_gw_) > 2) then
-			error = 2
-		elseif not checkUserName() and (globals.RealTime() - decode_string(_fb_gw_) > 2) then
-			error = 3
-		end
+	local error = 0
 
-		first_parsing = true
+	if not checkUserName() then
+		error = 1 
+	elseif (start_time - decode_string(_fb_gw_) > 2) then
+		error = 2
+	elseif not checkUserName() and (start_time - decode_string(_fb_gw_) > 2) then
+		error = 3
 	end
+	
+	return error
 end
 
 local isFirstLoad = true
 
 local function makeFirstElements()
-	if error ~= 0 then
+	if parseErrors() ~= 0 then
 		return
 	end
 
@@ -280,7 +281,7 @@ local screen_width, screen_height;
 
 --create sliders
 local function sliders_ui()
-	if error ~= 0 then
+	if parseErrors() ~= 0 then
 		return
 	end
 
@@ -290,7 +291,7 @@ end
 
 --make sliders them invisible
 local function guiChanges()
-	if error ~= 0 then
+	if parseErrors() ~= 0 then
 		return
 	end
 
@@ -428,7 +429,7 @@ end
 --general part
 --get weapon group
 local function getWeaponGroup()
-	if error ~= 0 then
+	if parseErrors() ~= 0 then
 		return
 	end
 
@@ -471,7 +472,7 @@ local font, font_outlined;
 local old_font_name, old_font_size, old_font_width;
 
 local function createFont()
-	if error ~= 0 then
+	if parseErrors() ~= 0 then
 		return
 	end
 
@@ -491,7 +492,7 @@ end
 
 --controle keybinds position
 local function controlePosition()
-	if error ~= 0 then
+	if parseErrors() ~= 0 then
 		return
 	end
 
@@ -513,7 +514,7 @@ end
 local enabled_functions = {};
 
 local function getFunctionsStates()
-	if error ~= 0 then
+	if parseErrors() ~= 0 then
 		return
 	end
 
@@ -541,7 +542,7 @@ end
 --@region KEYBINDS BASE
 --keybinds functions
 local function animationScale()
-	if error ~= 0 then
+	if parseErrors() ~= 0 then
 		return
 	end
 
@@ -559,7 +560,7 @@ local main_animation_value = 0
 local extra_alpha_remover = 0
 
 local function keybindsAnimations()
-	if error ~= 0 then
+	if parseErrors() ~= 0 then
 		return
 	end
 
@@ -633,7 +634,7 @@ end
 local static_colors = {};
 
 local function keybindsBase()
-	if error ~= 0 then
+	if parseErrors() ~= 0 then
 		return
 	end
 
@@ -761,7 +762,7 @@ end
 --@endregion
 
 local function showErrors()
-	if error ~= 0 then
+	if parseErrors() ~= 0 then
 		local error_codes = {"couldn't find you in the customer database", "problems with the server connection", "couldn't find you in the customer database and connect to server"}
 
 		local error_window = gui.Window("error_window", "Error Window", 100, 100, 450, 300);
@@ -777,7 +778,7 @@ local function showErrors()
 end
 
 local function finishParsing()
-	if error ~= 0 then
+	if parseErrors() ~= 0 then
 		print(error)
 		showErrors()
 	end
@@ -788,7 +789,6 @@ callbacks.Register('Draw', function()
 	getScreenSize()
 	changeElementsUi()
 	makeFirstElements()
-	parseErrors()
 	guiChanges()
 	createFont()
 	controlePosition()
