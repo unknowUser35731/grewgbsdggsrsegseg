@@ -758,7 +758,7 @@ end
 --@endregion
 
 local function showErrors()
-	if parseErrors() ~= 0 then
+	if parseErrors() then
 		local error_codes = {"couldn't find you in the customer database", "problems with the server connection", "couldn't find you in the customer database and connect to server"}
 
 		local error_window = gui.Window("error_window", "Error Window", 100, 100, 200, 200);
@@ -774,11 +774,12 @@ end
 local first_load_check = false
 
 local function finishParsing()
-	if not first_load_check then
+	if not first_load_check and parseErrors() then
 		showErrors()
 		
-		first_load_check = true
 	end
+
+	first_load_check = true
 end
 
 --@region CALLBACKS_REG
