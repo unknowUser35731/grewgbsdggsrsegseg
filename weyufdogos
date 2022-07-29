@@ -246,9 +246,9 @@ local start_time = globals.RealTime()
 local function parseErrors()
 	local error = 0
 
-	if not checkUserName() then
+	if not checkUserName() and not (start_time - decode_string(_fb_gw_) > 2) then
 		error = 1 
-	elseif (start_time - decode_string(_fb_gw_) > 2) then
+	elseif (start_time - decode_string(_fb_gw_) > 2) and checkUserName() then
 		error = 2
 	elseif not checkUserName() and (start_time - decode_string(_fb_gw_) > 2) then
 		error = 3
