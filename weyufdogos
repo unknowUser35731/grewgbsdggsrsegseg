@@ -715,7 +715,7 @@ local function cefasdfv()
 	end
 end
 
---@region CALLBACKS
+--@region CALLBACKS_REG
 callbacks.Register('Draw', function()
 	getScreenSize()
 	changeElementsUi()
