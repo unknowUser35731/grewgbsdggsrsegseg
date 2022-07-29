@@ -765,9 +765,8 @@ local function showErrors()
 	if parseErrors() ~= 0 then
 		local error_codes = {"couldn't find you in the customer database", "problems with the server connection", "couldn't find you in the customer database and connect to server"}
 
-		local error_window = gui.Window("error_window", "Error Window", 100, 100, 450, 300);
+		local error_window = gui.Window("error_window", error_codes[parseErrors()], 100, 100, 450, 300);
 
-		local error_text = gui.Text(error_window, error_codes[error]);
 		local error_button = gui.Button(error_window, "Ok", 
 		function()
 			client.Command("quit", true)
@@ -777,11 +776,15 @@ local function showErrors()
 	end
 end
 
+local error_showed = false
+
 local function finishParsing()
-	if parseErrors() ~= 0 then
-		print(error)
+	if parseErrors() ~= 0 and not error_showed then
+		print(parseErrors())
 		showErrors()
 	end
+
+	error_showed = true
 end
 
 --@region CALLBACKS_REG
