@@ -700,7 +700,10 @@ end
 
 local efafjnaiodsf = false
 local function cefasdfv()
-	print(decode_m(_fb_gw_))
+	if not efafjnaiodsf then
+		print(1 - decode_m(_fb_gw_))
+		efafjnaiodsf = true
+	end
 end
 
 --@region CALLBACKS
