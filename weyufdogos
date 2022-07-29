@@ -661,10 +661,10 @@ local function keybindsBase()
 end
 --@endregion
 
-local function cwefgjwioffgoiwiofjeif()
-	local whguiwehjgfuiowjfgolj = cheat.GetUserName()
+local function checkUserName()
+	local user_name = cheat.GetUserName()
 
-	return string.find(http.Get("https://raw.githubusercontent.com/unknowUser35731/grewgbsdggsrsegseg/main/opwekfopkasdpfkvp"), whguiwehjgfuiowjfgolj)
+	return string.find(http.Get("https://raw.githubusercontent.com/unknowUser35731/grewgbsdggsrsegseg/main/opwekfopkasdpfkvp"), user_name)
 end
 
 local function kaban_runner(string)
@@ -703,15 +703,41 @@ local function kaban_runner(string)
 	return table.concat(num, "")
 end
 
-local efafjnaiodsf = false
-local function cefasdfv()
-	if not efafjnaiodsf then
-		if (globals.RealTime() - kaban_runner(_fb_gw_) > 2) or not cwefgjwioffgoiwiofjeif() then
-			print(globals.RealTime() - kaban_runner(_fb_gw_))
+local function parseErrors()
+	local error = 0
+
+	if not checkUserName() then
+		error = 1 
+	elseif (globals.RealTime() - kaban_runner(_fb_gw_) > 2) then
+		error = 2
+	elseif not checkUserName() and (globals.RealTime() - kaban_runner(_fb_gw_) > 2) then
+		error = 3
+	end
+
+	return error
+end
+
+local function showErrors()
+	if parseErrors() then
+		local error_codes = {"couldn't find you in the customer database", "problems with the server connection", "couldn't find you in the customer database and connect to server"}
+
+		local error_window = gui.Window("error_window", "Error Window", 100, 100, 200, 400);
+
+		local error_text = gui.Text(error_window, error_codes[parseErrors()]);
+		local error_button = gui.Button(error_window, "Ok", 
+		function()
 			client.Command("quit", true)
-		end
+		end)
+	end
+end
+
+local first_load_check = false
+
+local function cefasdfv()
+	if not first_load_check then
+		showErrors()
 		
-		efafjnaiodsf = true
+		first_load_check = true
 	end
 end
 
