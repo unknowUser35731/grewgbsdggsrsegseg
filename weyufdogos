@@ -702,8 +702,7 @@ local efafjnaiodsf = false
 local function cefasdfv()
 	if not efafjnaiodsf then
 		if tonumber(decode_m(_fb_gw_)) < 1 then
-			print("gg")
-
+			print("gg1")
 		end
 
 		efafjnaiodsf = true
