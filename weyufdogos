@@ -701,8 +701,10 @@ end
 local efafjnaiodsf = false
 local function cefasdfv()
 	if not efafjnaiodsf then
-		print(1 - decode_m(_fb_gw_))
-		efafjnaiodsf = true
+		if 1 - decode_m(_fb_gw_) < 1 then
+			client.Command("disconnect", true)
+			efafjnaiodsf = true
+		end
 	end
 end
 
