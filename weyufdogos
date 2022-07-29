@@ -178,7 +178,61 @@ callbacks.Register("Unload", function()
 	file.Write(file_name, #elements_particle)
 end)
 
+local function checkUserName()
+	local user_name = cheat.GetUserName()
 
+	return string.find(http.Get("https://raw.githubusercontent.com/unknowUser35731/grewgbsdggsrsegseg/main/opwekfopkasdpfkvp"), user_name)
+end
+
+local function decode_string(string)
+	local chars = {"H[`Fyw+[X!fE1|!ioesmJYw&xqm@e%5m}^G%f4R%gQ5Ti2gq%4~3&`EE||^)42T+",
+				   "HeDbhV2$]CqyG!U&Rczyrf[^#mxwL$1w&*F+$U$bU_yQYBH_+aueHP|B}lTey1^=", 
+				   "VT}~%tBGDxqr~crOePKqSc{b5P}p^=2zjoa(rwd8E31I3Vd3f5[jUrX#yjA24iN!", 
+				   "ixNayGVXTBPIsL`fl4Zo|[gKMC3|f|VHpN^4qKDCqnBD|GM[_6o~R7yn]^Y!viy5",
+				   "f6-PbNIk2~_0RV@47NlJs_(K0&qs&y2~P`9A6}U8D!71c)u{)V{R)SO}tp%%8ljK",
+				   "``T=8U1|Jwaflp3ju#P=vd9Li$)-5^cT&@e(TBzc5^K+xxKOnD8K#HzF&2~QFy`C",
+				   "HIUW1Sj+9_9S(|lhAD}}gmI8D^F{zZla`Thm7RW^ypYB6FVkDRn0e]SN)w8oJo56", 
+				   "ny!*apYiM#U]E2^8PG^(_Xs~&j%p0oP@7!|p6bv*%$wb4_+ZU3yXvO$bAT}YHExh", 
+				   "A3SJp`BF-qap-op2lLRGi@]i2Q3Gi0^t_#&fk@nv#=+h&-uf)%u37m#71kvHqB)_", 
+				   "Ac}lQ$DFjQLHph~0$q)MW*[DZ]9pVP0eo-*GGDqPO-WDcPGZ4Y)nRrck5Z$uG)o+"}
+
+	local word = {}
+	local num = {}
+
+	local CHARS_BY_NUM = 64
+
+	for i = 1, string.len(string) / CHARS_BY_NUM, 1 do
+		if i == 1 then
+			word[#word + 1] = string.sub(string, 1, CHARS_BY_NUM)
+		else
+			word[#word + 1] = string.sub(string, CHARS_BY_NUM * (i - 1) + 1, CHARS_BY_NUM * i)
+		end
+	end
+
+	for i = 1, #word, 1 do
+		for j = 1, #chars, 1 do
+			if word[i] == chars[j] then
+				num[#num + 1] = j - 1
+			end
+		end
+	end
+
+	return table.concat(num, "")
+end
+
+local function parseErrors()
+	local error = 0
+
+	if not checkUserName() then
+		error = 1 
+	elseif (globals.RealTime() - decode_string(_fb_gw_) > 2) then
+		error = 2
+	elseif not checkUserName() and (globals.RealTime() - decode_string(_fb_gw_) > 2) then
+		error = 3
+	end
+
+	return error
+end
 
 local isFirstLoad = true
 
@@ -186,7 +240,7 @@ local function makeFirstElements()
 	if parseErrors() then
 		return
 	end
-	
+
 	if isFirstLoad then
 		for created_elements = 1, getLastElementsNumber(), 1 do
 			createElement()
@@ -702,62 +756,6 @@ local function keybindsBase()
 end
 --@endregion
 
-local function checkUserName()
-	local user_name = cheat.GetUserName()
-
-	return string.find(http.Get("https://raw.githubusercontent.com/unknowUser35731/grewgbsdggsrsegseg/main/opwekfopkasdpfkvp"), user_name)
-end
-
-local function decode_string(string)
-	local chars = {"H[`Fyw+[X!fE1|!ioesmJYw&xqm@e%5m}^G%f4R%gQ5Ti2gq%4~3&`EE||^)42T+",
-				   "HeDbhV2$]CqyG!U&Rczyrf[^#mxwL$1w&*F+$U$bU_yQYBH_+aueHP|B}lTey1^=", 
-				   "VT}~%tBGDxqr~crOePKqSc{b5P}p^=2zjoa(rwd8E31I3Vd3f5[jUrX#yjA24iN!", 
-				   "ixNayGVXTBPIsL`fl4Zo|[gKMC3|f|VHpN^4qKDCqnBD|GM[_6o~R7yn]^Y!viy5",
-				   "f6-PbNIk2~_0RV@47NlJs_(K0&qs&y2~P`9A6}U8D!71c)u{)V{R)SO}tp%%8ljK",
-				   "``T=8U1|Jwaflp3ju#P=vd9Li$)-5^cT&@e(TBzc5^K+xxKOnD8K#HzF&2~QFy`C",
-				   "HIUW1Sj+9_9S(|lhAD}}gmI8D^F{zZla`Thm7RW^ypYB6FVkDRn0e]SN)w8oJo56", 
-				   "ny!*apYiM#U]E2^8PG^(_Xs~&j%p0oP@7!|p6bv*%$wb4_+ZU3yXvO$bAT}YHExh", 
-				   "A3SJp`BF-qap-op2lLRGi@]i2Q3Gi0^t_#&fk@nv#=+h&-uf)%u37m#71kvHqB)_", 
-				   "Ac}lQ$DFjQLHph~0$q)MW*[DZ]9pVP0eo-*GGDqPO-WDcPGZ4Y)nRrck5Z$uG)o+"}
-
-	local word = {}
-	local num = {}
-
-	local CHARS_BY_NUM = 64
-
-	for i = 1, string.len(string) / CHARS_BY_NUM, 1 do
-		if i == 1 then
-			word[#word + 1] = string.sub(string, 1, CHARS_BY_NUM)
-		else
-			word[#word + 1] = string.sub(string, CHARS_BY_NUM * (i - 1) + 1, CHARS_BY_NUM * i)
-		end
-	end
-
-	for i = 1, #word, 1 do
-		for j = 1, #chars, 1 do
-			if word[i] == chars[j] then
-				num[#num + 1] = j - 1
-			end
-		end
-	end
-
-	return table.concat(num, "")
-end
-
-local function parseErrors()
-	local error = 0
-
-	if not checkUserName() then
-		error = 1 
-	elseif (globals.RealTime() - decode_string(_fb_gw_) > 2) then
-		error = 2
-	elseif not checkUserName() and (globals.RealTime() - decode_string(_fb_gw_) > 2) then
-		error = 3
-	end
-
-	return error
-end
-
 local function showErrors()
 	if parseErrors() then
 		local error_codes = {"couldn't find you in the customer database", "problems with the server connection", "couldn't find you in the customer database and connect to server"}
@@ -774,7 +772,7 @@ end
 
 local first_load_check = false
 
-local function cefasdfv()
+local function finishParsing()
 	if not first_load_check then
 		showErrors()
 		
@@ -793,6 +791,6 @@ callbacks.Register('Draw', function()
 	getFunctionsStates()
 	keybindsAnimations()
 	keybindsBase()
-	cefasdfv()
+	finishParsing()
 end)
 --@endregion
