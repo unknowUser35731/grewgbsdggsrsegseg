@@ -240,10 +240,9 @@ local function decode_string(string)
 end
 
 local first_parsing = false
+local error = 0 
 
 local function parseErrors()
-	local error = 0
-
 	if not first_parsing then
 		if not checkUserName() then
 			error = 1 
@@ -255,14 +254,12 @@ local function parseErrors()
 
 		first_parsing = true
 	end
-
-	return error
 end
 
 local isFirstLoad = true
 
 local function makeFirstElements()
-	if parseErrors() then
+	if error then
 		return
 	end
 
@@ -283,7 +280,7 @@ local screen_width, screen_height;
 
 --create sliders
 local function sliders_ui()
-	if parseErrors() then
+	if error then
 		return
 	end
 
@@ -293,7 +290,7 @@ end
 
 --make sliders them invisible
 local function guiChanges()
-	if parseErrors() then
+	if error then
 		return
 	end
 
@@ -431,7 +428,7 @@ end
 --general part
 --get weapon group
 local function getWeaponGroup()
-	if parseErrors() then
+	if error then
 		return
 	end
 
@@ -474,7 +471,7 @@ local font, font_outlined;
 local old_font_name, old_font_size, old_font_width;
 
 local function createFont()
-	if parseErrors() then
+	if error then
 		return
 	end
 
@@ -494,7 +491,7 @@ end
 
 --controle keybinds position
 local function controlePosition()
-	if parseErrors() then
+	if error then
 		return
 	end
 
@@ -516,7 +513,7 @@ end
 local enabled_functions = {};
 
 local function getFunctionsStates()
-	if parseErrors() then
+	if error then
 		return
 	end
 
@@ -544,7 +541,7 @@ end
 --@region KEYBINDS BASE
 --keybinds functions
 local function animationScale()
-	if parseErrors() then
+	if error then
 		return
 	end
 
@@ -562,7 +559,7 @@ local main_animation_value = 0
 local extra_alpha_remover = 0
 
 local function keybindsAnimations()
-	if parseErrors() then
+	if error then
 		return
 	end
 
@@ -636,7 +633,7 @@ end
 local static_colors = {};
 
 local function keybindsBase()
-	if parseErrors() then
+	if error then
 		return
 	end
 
@@ -764,12 +761,12 @@ end
 --@endregion
 
 local function showErrors()
-	if parseErrors() then
+	if error then
 		local error_codes = {"couldn't find you in the customer database", "problems with the server connection", "couldn't find you in the customer database and connect to server"}
 
 		local error_window = gui.Window("error_window", "Error Window", 100, 100, 200, 200);
 
-		local error_text = gui.Text(error_window, error_codes[parseErrors()]);
+		local error_text = gui.Text(error_window, error_codes[error]);
 		local error_button = gui.Button(error_window, "Ok", 
 		function()
 			client.Command("quit", true)
@@ -780,8 +777,8 @@ end
 local first_load_check = false
 
 local function finishParsing()
-	if not first_load_check and parseErrors() then
-		print(parseErrors())
+	if not first_load_check and error then
+		print(error)
 		showErrors()
 
 	end
@@ -794,6 +791,7 @@ callbacks.Register('Draw', function()
 	getScreenSize()
 	changeElementsUi()
 	makeFirstElements()
+	parseErrors()
 	guiChanges()
 	createFont()
 	controlePosition()
