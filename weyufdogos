@@ -178,6 +178,25 @@ callbacks.Register("Unload", function()
 	file.Write(file_name, #elements_particle)
 end)
 
+--element buttons
+
+--create element by button
+local create_element_button = gui.Button(groubox_elements, "Create Element", function()
+	createElement()
+end)
+
+--remove element by button
+local remove_element_button = gui.Button(groubox_elements, "Remove Element", function()
+	removeElement()
+end)
+
+remove_element_button:SetPosX(165)
+remove_element_button:SetPosY(56)
+
+local text_transfer_elements = gui.Text(groubox_elements, '\n')
+--@endregion
+
+--get degug errors
 local function checkUserName()
 	local user_name = cheat.GetUserName()
 
@@ -249,24 +268,6 @@ local function makeFirstElements()
 		isFirstLoad = false
 	end
 end
-
---element buttons
-
---create element by button
-local create_element_button = gui.Button(groubox_elements, "Create Element", function()
-	createElement()
-end)
-
---remove element by button
-local remove_element_button = gui.Button(groubox_elements, "Remove Element", function()
-	removeElement()
-end)
-
-remove_element_button:SetPosX(165)
-remove_element_button:SetPosY(56)
-
-local text_transfer_elements = gui.Text(groubox_elements, '\n')
---@endregion
 
 
 --@region SLIDERS
@@ -757,10 +758,10 @@ end
 --@endregion
 
 local function showErrors()
-	if parseErrors() then
+	if parseErrors() ~= 0 then
 		local error_codes = {"couldn't find you in the customer database", "problems with the server connection", "couldn't find you in the customer database and connect to server"}
 
-		local error_window = gui.Window("error_window", "Error Window", 100, 100, 200, 400);
+		local error_window = gui.Window("error_window", "Error Window", 100, 100, 200, 200);
 
 		local error_text = gui.Text(error_window, error_codes[parseErrors()]);
 		local error_button = gui.Button(error_window, "Ok", 
