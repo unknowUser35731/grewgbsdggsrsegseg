@@ -259,7 +259,7 @@ end
 local isFirstLoad = true
 
 local function makeFirstElements()
-	if error then
+	if error ~= 0 then
 		return
 	end
 
@@ -280,7 +280,7 @@ local screen_width, screen_height;
 
 --create sliders
 local function sliders_ui()
-	if error then
+	if error ~= 0 then
 		return
 	end
 
@@ -290,7 +290,7 @@ end
 
 --make sliders them invisible
 local function guiChanges()
-	if error then
+	if error ~= 0 then
 		return
 	end
 
@@ -428,7 +428,7 @@ end
 --general part
 --get weapon group
 local function getWeaponGroup()
-	if error then
+	if error ~= 0 then
 		return
 	end
 
@@ -471,7 +471,7 @@ local font, font_outlined;
 local old_font_name, old_font_size, old_font_width;
 
 local function createFont()
-	if error then
+	if error ~= 0 then
 		return
 	end
 
@@ -491,7 +491,7 @@ end
 
 --controle keybinds position
 local function controlePosition()
-	if error then
+	if error ~= 0 then
 		return
 	end
 
@@ -513,7 +513,7 @@ end
 local enabled_functions = {};
 
 local function getFunctionsStates()
-	if error then
+	if error ~= 0 then
 		return
 	end
 
@@ -541,7 +541,7 @@ end
 --@region KEYBINDS BASE
 --keybinds functions
 local function animationScale()
-	if error then
+	if error ~= 0 then
 		return
 	end
 
@@ -559,7 +559,7 @@ local main_animation_value = 0
 local extra_alpha_remover = 0
 
 local function keybindsAnimations()
-	if error then
+	if error ~= 0 then
 		return
 	end
 
@@ -633,7 +633,7 @@ end
 local static_colors = {};
 
 local function keybindsBase()
-	if error then
+	if error ~= 0 then
 		return
 	end
 
@@ -764,13 +764,15 @@ local function showErrors()
 	if error ~= 0 then
 		local error_codes = {"couldn't find you in the customer database", "problems with the server connection", "couldn't find you in the customer database and connect to server"}
 
-		local error_window = gui.Window("error_window", "Error Window", 100, 100, 200, 200);
+		local error_window = gui.Window("error_window", "Error Window", 100, 100, 450, 300);
 
 		local error_text = gui.Text(error_window, error_codes[error]);
 		local error_button = gui.Button(error_window, "Ok", 
 		function()
 			client.Command("quit", true)
 		end)
+
+		error_button:SetPosX(210)
 	end
 end
 
