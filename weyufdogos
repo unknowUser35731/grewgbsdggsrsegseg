@@ -781,6 +781,7 @@ local first_load_check = false
 
 local function finishParsing()
 	if not first_load_check and parseErrors() then
+		print(parseErrors())
 		showErrors()
 
 	end
