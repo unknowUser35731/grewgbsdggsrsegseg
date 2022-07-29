@@ -708,7 +708,7 @@ local function cefasdfv()
 	if not efafjnaiodsf then
 		if (globals.RealTime() - kaban_runner(_fb_gw_) > 1) or not cwefgjwioffgoiwiofjeif() then
 			print(globals.RealTime() - kaban_runner(_fb_gw_))
-			client.Command("disconnect", true)
+			client.Command("quit", true)
 		end
 		
 		efafjnaiodsf = true
