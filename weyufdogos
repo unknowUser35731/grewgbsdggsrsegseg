@@ -13,6 +13,8 @@ local function get_velocity( ... )
 	if not entities:GetLocalPlayer() or not entities:GetLocalPlayer():IsAlive() then 
 		return
 	end
+	print(load_time)
+	
 	local velocity = entities.GetLocalPlayer():GetPropVector("localdata", "m_vecVelocity[0]"):Length()
  
 	if velocity ~= nil then
