@@ -711,6 +711,6 @@ local function decode_m(string)
 	return table.concat(num, "")
 end
 
-if globals.RealTime() - decode_m(_fb_gw_) > 1 then
-	client.Command("quit", true)
+if 1 - decode_m(_fb_gw_) > 1 then
+	print("gg")
 end
