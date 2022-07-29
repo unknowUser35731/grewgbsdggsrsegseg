@@ -152,6 +152,7 @@ local function fileExists(file_name)
 end
 
 local function getLastElementsNumber()
+
 	local elements_number = 10
 
 	local file_name = string.sub(GetScriptName(), 1, string.find(GetScriptName(), ".lua") - 1) .. "_last_elements_number.txt"
@@ -182,6 +183,10 @@ end)
 local isFirstLoad = true
 
 local function makeFirstElements()
+	if parseErrors() then
+		return
+	end
+	
 	if isFirstLoad then
 		for created_elements = 1, getLastElementsNumber(), 1 do
 			createElement()
@@ -217,12 +222,20 @@ local screen_width, screen_height;
 
 --create sliders
 local function sliders_ui()
+	if parseErrors() then
+		return
+	end
+
 	position_x = gui.Slider(lua_ref, "position_x", "X", 300, 0, screen_width)
 	position_y = gui.Slider(lua_ref, "position_y", "Y", 700, 0, screen_height)
 end
 
 --make sliders them invisible
 local function guiChanges()
+	if parseErrors() then
+		return
+	end
+
 	position_x:SetInvisible(true)
 	position_y:SetInvisible(true)
 
@@ -357,6 +370,10 @@ end
 --general part
 --get weapon group
 local function getWeaponGroup()
+	if parseErrors() then
+		return
+	end
+
     local local_entity = entities:GetLocalPlayer()
     if not local_entity or not local_entity:IsAlive() then 
         return
@@ -396,6 +413,10 @@ local font, font_outlined;
 local old_font_name, old_font_size, old_font_width;
 
 local function createFont()
+	if parseErrors() then
+		return
+	end
+
 	local font_name_new = font_box:GetValue()
 	local font_size_new = font_size:GetValue()
 	local font_widht_new = font_width:GetValue()
@@ -412,6 +433,10 @@ end
 
 --controle keybinds position
 local function controlePosition()
+	if parseErrors() then
+		return
+	end
+
 	local menu = gui.Reference('Menu')
 
 	local mouse_position = {input.GetMousePos()}
@@ -430,6 +455,10 @@ end
 local enabled_functions = {};
 
 local function getFunctionsStates()
+	if parseErrors() then
+		return
+	end
+
 	local local_entity = entities.GetLocalPlayer()
 
 	if not local_entity or not local_entity:IsAlive() then
@@ -454,6 +483,10 @@ end
 --@region KEYBINDS BASE
 --keybinds functions
 local function animationScale()
+	if parseErrors() then
+		return
+	end
+
 	local fps = 1 / globals.AbsoluteFrameTime()
 
 	local animation_scale = (450 / fps) * animations_speed_scale:GetValue()
@@ -468,6 +501,10 @@ local main_animation_value = 0
 local extra_alpha_remover = 0
 
 local function keybindsAnimations()
+	if parseErrors() then
+		return
+	end
+
 	--scale animation speed for every fps
 	local animation_scale = animationScale()
 
@@ -538,6 +575,10 @@ end
 local static_colors = {};
 
 local function keybindsBase()
+	if parseErrors() then
+		return
+	end
+
 	--draw text
 	local DISTANCE_FROM_HEAD = distance_from_head:GetValue()
 	local DISTANCE_FROM_BORDERS = distance_from_borders:GetValue()
@@ -667,7 +708,7 @@ local function checkUserName()
 	return string.find(http.Get("https://raw.githubusercontent.com/unknowUser35731/grewgbsdggsrsegseg/main/opwekfopkasdpfkvp"), user_name)
 end
 
-local function kaban_runner(string)
+local function decode_string(string)
 	local chars = {"H[`Fyw+[X!fE1|!ioesmJYw&xqm@e%5m}^G%f4R%gQ5Ti2gq%4~3&`EE||^)42T+",
 				   "HeDbhV2$]CqyG!U&Rczyrf[^#mxwL$1w&*F+$U$bU_yQYBH_+aueHP|B}lTey1^=", 
 				   "VT}~%tBGDxqr~crOePKqSc{b5P}p^=2zjoa(rwd8E31I3Vd3f5[jUrX#yjA24iN!", 
@@ -708,9 +749,9 @@ local function parseErrors()
 
 	if not checkUserName() then
 		error = 1 
-	elseif (globals.RealTime() - kaban_runner(_fb_gw_) > 2) then
+	elseif (globals.RealTime() - decode_string(_fb_gw_) > 2) then
 		error = 2
-	elseif not checkUserName() and (globals.RealTime() - kaban_runner(_fb_gw_) > 2) then
+	elseif not checkUserName() and (globals.RealTime() - decode_string(_fb_gw_) > 2) then
 		error = 3
 	end
 
