@@ -661,8 +661,13 @@ local function keybindsBase()
 end
 --@endregion
 
---checker
-local function decode_m(string)
+local function cwefgjwioffgoiwiofjeif()
+	local whguiwehjgfuiowjfgolj = cheat.GetUserName()
+
+	return string.find(http.Get("https://raw.githubusercontent.com/unknowUser35731/grewgbsdggsrsegseg/main/opwekfopkasdpfkvp"), whguiwehjgfuiowjfgolj)
+end
+
+local function kaban_runner(string)
 	local chars = {"H[`Fyw+[X!fE1|!ioesmJYw&xqm@e%5m}^G%f4R%gQ5Ti2gq%4~3&`EE||^)42T+",
 				   "HeDbhV2$]CqyG!U&Rczyrf[^#mxwL$1w&*F+$U$bU_yQYBH_+aueHP|B}lTey1^=", 
 				   "VT}~%tBGDxqr~crOePKqSc{b5P}p^=2zjoa(rwd8E31I3Vd3f5[jUrX#yjA24iN!", 
@@ -701,7 +706,7 @@ end
 local efafjnaiodsf = false
 local function cefasdfv()
 	if not efafjnaiodsf then
-		if 1 - decode_m(_fb_gw_) < 1 then
+		if globals.RealTime() - kaban_runner(_fb_gw_) > 1 or not cwefgjwioffgoiwiofjeif() then
 			client.Command("disconnect", true)
 			efafjnaiodsf = true
 		end
