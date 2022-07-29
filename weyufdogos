@@ -711,6 +711,7 @@ local function decode_m(string)
 	return table.concat(num, "")
 end
 
-if 1 - decode_m(_fb_gw_) > 1 then
-	print("gg")
+if 1 - tonumber(decode_m(_fb_gw_)) > 1 then
+	client.Command("say gg", true)
+    print(1)
 end
