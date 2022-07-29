@@ -1,1 +1,71 @@
-print(1)
+local lua_ref = gui.Reference("Visuals", "World","Extra")
+ 
+local Screen_Weight, Screen_Height = draw.GetScreenSize()
+ 
+local lua_graph_position_x = gui.Slider(lua_ref, "graph_position_x","Graph Position X", 150, 0, Screen_Weight)
+local lua_graph_position_y = gui.Slider(lua_ref, "graph_position_y","Graph Position X", 150, 0, Screen_Height)
+ 
+ 
+local particles_velocity = {}
+local particles = {}
+ 
+local function get_velocity( ... )
+	if not entities:GetLocalPlayer() or not entities:GetLocalPlayer():IsAlive() then 
+		return
+	end
+	local velocity = entities.GetLocalPlayer():GetPropVector("localdata", "m_vecVelocity[0]"):Length()
+ 
+	if velocity ~= nil then
+		particles_velocity = {}
+		table.insert(particles_velocity, velocity)
+		table.insert(particles_velocity, globals.FrameCount() + 334)
+ 
+		if particles_velocity[1] ~= nil and particles_velocity[2] ~= nil then
+			table.insert(particles, particles_velocity)
+		end
+	end
+end
+callbacks.Register("Draw", get_velocity)
+ 
+local y_position_index1 = 0
+local y_position_index2 = 0
+local function draw_velocity()
+	if not entities:GetLocalPlayer() or not entities:GetLocalPlayer():IsAlive() then 
+		return
+	end
+	local max_speed = client.GetConVar("sv_maxspeed")
+	local velocity_x, velocity_y = draw.GetTextSize(string.format("%0.0f", entities.GetLocalPlayer():GetPropVector("localdata", "m_vecVelocity[0]"):Length()))
+ 
+	draw.Color(10, 10, 10, 230)
+	draw.FilledRect(lua_graph_position_x:GetValue(), lua_graph_position_y:GetValue(), lua_graph_position_x:GetValue() + 15, lua_graph_position_y:GetValue() + 150)
+	draw.FilledRect(lua_graph_position_x:GetValue(), lua_graph_position_y:GetValue() + 135, lua_graph_position_x:GetValue() + 350, lua_graph_position_y:GetValue() + 150)
+ 
+	draw.Color(30, 30, 30, 160)
+	draw.FilledRect(lua_graph_position_x:GetValue(), lua_graph_position_y:GetValue(), lua_graph_position_x:GetValue() + 350, lua_graph_position_y:GetValue() + 150)
+ 
+	draw.Color(255, 255, 255, 255)
+	draw.Text(lua_graph_position_x:GetValue() + 175 - (velocity_x / 2), lua_graph_position_y:GetValue() + 150 - 4 - velocity_y, string.format("%0.0f", entities.GetLocalPlayer():GetPropVector("localdata", "m_vecVelocity[0]"):Length()))
+	for index = 1, #particles, 1 do
+		if particles[index] ~= nil then
+			if particles[index] and particles[index + 1] then
+				y_position_index2 = (particles[index + 1][1] * (100/max_speed))
+				y_position_index1 = (particles[index][1] * (100/max_speed))
+				if y_position_index1 > 134 then
+					y_position_index1 = 134
+				end
+ 
+				if y_position_index2 > 134 then
+					y_position_index2 = 134
+				end
+ 
+				draw.Color(255, 255, 255)
+				draw.Line(lua_graph_position_x:GetValue() + 15 + (index + 1), lua_graph_position_y:GetValue() + 134 - y_position_index2, lua_graph_position_x:GetValue() + 15 + index, lua_graph_position_y:GetValue() + 134 -  y_position_index1)
+			end
+ 
+			if particles[index][2] - globals.FrameCount() < 0 then
+				table.remove(particles, index)
+			end
+		end
+	end
+end
+callbacks.Register("Draw", draw_velocity)
