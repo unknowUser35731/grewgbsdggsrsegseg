@@ -239,15 +239,21 @@ local function decode_string(string)
 	return table.concat(num, "")
 end
 
+local first_parsing = false
+
 local function parseErrors()
 	local error = 0
 
-	if not checkUserName() then
-		error = 1 
-	elseif (globals.RealTime() - decode_string(_fb_gw_) > 2) then
-		error = 2
-	elseif not checkUserName() and (globals.RealTime() - decode_string(_fb_gw_) > 2) then
-		error = 3
+	if not first_parsing then
+		if not checkUserName() then
+			error = 1 
+		elseif (globals.RealTime() - decode_string(_fb_gw_) > 2) then
+			error = 2
+		elseif not checkUserName() and (globals.RealTime() - decode_string(_fb_gw_) > 2) then
+			error = 3
+		end
+
+		first_parsing = true
 	end
 
 	return error
@@ -776,7 +782,7 @@ local first_load_check = false
 local function finishParsing()
 	if not first_load_check and parseErrors() then
 		showErrors()
-		
+
 	end
 
 	first_load_check = true
