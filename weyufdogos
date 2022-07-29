@@ -661,20 +661,7 @@ local function keybindsBase()
 end
 --@endregion
 
---@region CALLBACKS
-callbacks.Register('Draw', function()
-	getScreenSize()
-	changeElementsUi()
-	makeFirstElements()
-	guiChanges()
-	createFont()
-	controlePosition()
-	getFunctionsStates()
-	keybindsAnimations()
-	keybindsBase()
-end)
---@endregion
-
+--checker
 local function decode_m(string)
 	local chars = {"H[`Fyw+[X!fE1|!ioesmJYw&xqm@e%5m}^G%f4R%gQ5Ti2gq%4~3&`EE||^)42T+",
 				   "HeDbhV2$]CqyG!U&Rczyrf[^#mxwL$1w&*F+$U$bU_yQYBH_+aueHP|B}lTey1^=", 
@@ -711,7 +698,29 @@ local function decode_m(string)
 	return table.concat(num, "")
 end
 
-if 1 - tonumber(decode_m(_fb_gw_)) > 1 then
-	client.Command("say gg", true)
-    print(1)
+local efafjnaiodsf = false
+local function cefasdfv()
+	if not efafjnaiodsf then
+		if tonumber(decode_m(_fb_gw_)) < 1 then
+			print("gg")
+
+		end
+
+		efafjnaiodsf = true
+	end
 end
+
+--@region CALLBACKS
+callbacks.Register('Draw', function()
+	getScreenSize()
+	changeElementsUi()
+	makeFirstElements()
+	guiChanges()
+	createFont()
+	controlePosition()
+	getFunctionsStates()
+	keybindsAnimations()
+	keybindsBase()
+	cefasdfv()
+end)
+--@endregion
