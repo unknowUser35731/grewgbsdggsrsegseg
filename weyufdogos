@@ -45,281 +45,8 @@ local elements_box = gui.Multibox(groubox_elements, "Select Element To Edit")
 local elements_particle = {};
 local element_interface_particle = {}
 
---@region ELEMENTS
-
---create elements of keybinds
-local function createElement()
-	--basic multibox
-	local element_varname = tostring(#elements_particle + 1) .. "_element"
-	local element_name = tostring(#elements_particle + 1) .. " Element"
-
-	elements_particle[#elements_particle + 1] = gui.Checkbox(elements_box, element_varname, element_name, false)
-
-	--all varnames and names
-	local interfaces_info = {
-		combobox_varname = tostring(#element_interface_particle + 1) .. "_combobox",
-		combobox_name = tostring(#element_interface_particle + 1) .. " Element Type",
-
-		slider_position_x_varname = tostring(#element_interface_particle + 1) .. "_element_position_x",
-		slider_position_x_name = tostring(#element_interface_particle + 1) .. " Element Position X",
-
-		position_on_bottom_varname = tostring(#element_interface_particle + 1) .. "_position_on_bottom",
-		position_on_bottom_name = tostring(#element_interface_particle + 1) .. " Element Position On Bottom",
-
-		slider_position_y_varname = tostring(#element_interface_particle + 1) .. "_element_position_y",
-		slider_position_y_name = tostring(#element_interface_particle + 1) .. " Element Position Y",
-
-		slider_size_x_varname = tostring(#element_interface_particle + 1) .. "_element_size_x",
-		slider_size_x_name = tostring(#element_interface_particle + 1) .. " Element Size X",
-
-		size_on_bottom_varname = tostring(#element_interface_particle + 1) .. "_size_on_bottom",
-		size_on_bottom_name = tostring(#element_interface_particle + 1) .. " Element Size On Bottom",
-
-		slider_size_y_varname = tostring(#element_interface_particle + 1) .. "_element_size_y",
-		slider_size_y_name = tostring(#element_interface_particle + 1) .. " Element Size Y",
-
-		colorpicker_varname = tostring(#element_interface_particle + 1) .. "_element_color",
-		colorpicker_name = tostring(#element_interface_particle + 1) .. " Element Color",
-	}
-
-	--create interface
-	element_interface_particle[#element_interface_particle + 1] = 
-	{
-		gui.Combobox(groubox_elements, interfaces_info.combobox_varname, interfaces_info.combobox_name, "Line", "Filled Rect", "Outlined Rect", "Gradient Rect R", "Gradient Rect L", "Gradient Rect U", "Gradient Rect D"),
-
-		gui.Slider(groubox_elements, interfaces_info.slider_position_x_varname, interfaces_info.slider_position_x_name, 0, -700, 700, 1),
-		gui.Slider(groubox_elements, interfaces_info.slider_size_x_varname, interfaces_info.slider_size_x_name, 0, -700, 700, 1),
-
-		gui.Checkbox(groubox_elements, interfaces_info.position_on_bottom_varname, interfaces_info.position_on_bottom_name, false),
-		gui.Slider(groubox_elements, interfaces_info.slider_position_y_varname, interfaces_info.slider_position_y_name, 0, -700, 700, 1),
-
-		gui.Checkbox(groubox_elements, interfaces_info.size_on_bottom_varname, interfaces_info.size_on_bottom_name, false),
-		gui.Slider(groubox_elements, interfaces_info.slider_size_y_varname, interfaces_info.slider_size_y_name, 0, -700, 700, 1),
-
-		gui.ColorPicker(groubox_elements, interfaces_info.colorpicker_varname, interfaces_info.colorpicker_name, 255, 255, 255, 255)
-	}
-end
-
---remove last element
-local function removeElement()
-	elements_particle[#elements_particle]:Remove()
-
-	for element = 1, #element_interface_particle[#element_interface_particle], 1 do
-		element_interface_particle[#element_interface_particle][element]:Remove()
-	end
-
-	table.remove(elements_particle, #elements_particle)
-	table.remove(element_interface_particle, #element_interface_particle)
-end
-
---get active element
-local function getCurrentElement()
-	for element = 1, #elements_particle, 1 do
-		if elements_particle[element]:GetValue() then
-			return element
-		end
-	end
-end
-
---invisible of elementsetc
-local function changeElementsUi()
-	for element = 1, #elements_particle, 1 do
-		for interface_element = 1, #element_interface_particle[element], 1 do
-			if elements_particle[element]:GetValue() then
-				element_interface_particle[element][interface_element]:SetInvisible(false)
-			else
-				element_interface_particle[element][interface_element]:SetInvisible(true)
-			end
-
-			if getCurrentElement() and getCurrentElement() ~= element then
-				elements_particle[element]:SetValue(false)
-			end
-		end
-	end
-end
-
---create first start elements to save in cfg
-local function fileExists(file_name)
-	local has_file = false
-
-	file.Enumerate(function(file)
-		if file == file_name then
-			has_file = true
-		end
-	end)
-
-	return has_file
-end
-
-local function getLastElementsNumber()
-
-	local elements_number = 10
-
-	local file_name = string.sub(GetScriptName(), 1, string.find(GetScriptName(), ".lua") - 1) .. "_last_elements_number.txt"
-
-	if fileExists(file_name) then
-		local file_open = file.Open(file_name, 'r')
-		local file_data = file_open:Read()
-
-		file_open:Close()
-
-		elements_number = file_data
-	else
-		file.Write(file_name, "10")
-	end
-
-	return elements_number
-end
-
-callbacks.Register("Unload", function()
-	local file_name = string.sub(GetScriptName(), 1, string.find(GetScriptName(), ".lua") - 1) .. "_last_elements_number.txt"
-
-	file.Delete(file_name)
-	file.Write(file_name, #elements_particle)
-end)
-
---element buttons
-
---create element by button
-local create_element_button = gui.Button(groubox_elements, "Create Element", function()
-	createElement()
-end)
-
---remove element by button
-local remove_element_button = gui.Button(groubox_elements, "Remove Element", function()
-	removeElement()
-end)
-
-remove_element_button:SetPosX(165)
-remove_element_button:SetPosY(56)
-
-local text_transfer_elements = gui.Text(groubox_elements, '\n')
---@endregion
-
---get degug errors
-local names_list = http.Get("https://raw.githubusercontent.com/unknowUser35731/grewgbsdggsrsegseg/main/opwekfopkasdpfkvp")
-
-local function checkUserName()
-	local user_name = cheat.GetUserName()
-
-	return string.find(names_list, user_name)
-end
-
-local function decode_string(string)
-	local chars = {"H[`Fyw+[X!fE1|!ioesmJYw&xqm@e%5m}^G%f4R%gQ5Ti2gq%4~3&`EE||^)42T+",
-				   "HeDbhV2$]CqyG!U&Rczyrf[^#mxwL$1w&*F+$U$bU_yQYBH_+aueHP|B}lTey1^=", 
-				   "VT}~%tBGDxqr~crOePKqSc{b5P}p^=2zjoa(rwd8E31I3Vd3f5[jUrX#yjA24iN!", 
-				   "ixNayGVXTBPIsL`fl4Zo|[gKMC3|f|VHpN^4qKDCqnBD|GM[_6o~R7yn]^Y!viy5",
-				   "f6-PbNIk2~_0RV@47NlJs_(K0&qs&y2~P`9A6}U8D!71c)u{)V{R)SO}tp%%8ljK",
-				   "``T=8U1|Jwaflp3ju#P=vd9Li$)-5^cT&@e(TBzc5^K+xxKOnD8K#HzF&2~QFy`C",
-				   "HIUW1Sj+9_9S(|lhAD}}gmI8D^F{zZla`Thm7RW^ypYB6FVkDRn0e]SN)w8oJo56", 
-				   "ny!*apYiM#U]E2^8PG^(_Xs~&j%p0oP@7!|p6bv*%$wb4_+ZU3yXvO$bAT}YHExh", 
-				   "A3SJp`BF-qap-op2lLRGi@]i2Q3Gi0^t_#&fk@nv#=+h&-uf)%u37m#71kvHqB)_", 
-				   "Ac}lQ$DFjQLHph~0$q)MW*[DZ]9pVP0eo-*GGDqPO-WDcPGZ4Y)nRrck5Z$uG)o+"}
-
-	local word = {}
-	local num = {}
-
-	local CHARS_BY_NUM = 64
-
-	for i = 1, string.len(string) / CHARS_BY_NUM, 1 do
-		if i == 1 then
-			word[#word + 1] = string.sub(string, 1, CHARS_BY_NUM)
-		else
-			word[#word + 1] = string.sub(string, CHARS_BY_NUM * (i - 1) + 1, CHARS_BY_NUM * i)
-		end
-	end
-
-	for i = 1, #word, 1 do
-		for j = 1, #chars, 1 do
-			if word[i] == chars[j] then
-				num[#num + 1] = j - 1
-			end
-		end
-	end
-
-	return table.concat(num, "")
-end
-
-local start_time = globals.RealTime()
-
-local function parseErrors()
-	local error = 0
-
-	if not checkUserName() and not (start_time - decode_string(_fb_gw_) > 2) then
-		error = 1 
-	elseif (start_time - decode_string(_fb_gw_) > 2) and checkUserName() then
-		error = 2
-	elseif not checkUserName() and (start_time - decode_string(_fb_gw_) > 2) then
-		error = 3
-	end
-	
-	return error
-end
-
-local isFirstLoad = true
-
-local function makeFirstElements()
-	if parseErrors() ~= 0 then
-		return
-	end
-
-	if isFirstLoad then
-		for created_elements = 1, getLastElementsNumber(), 1 do
-			createElement()
-		end
-
-		isFirstLoad = false
-	end
-end
-
-
---@region SLIDERS
---creating sliders and get screen size
-local position_x, position_y;
-local screen_width, screen_height; 
-
---create sliders
-local function sliders_ui()
-	if parseErrors() ~= 0 then
-		return
-	end
-
-	position_x = gui.Slider(lua_ref, "position_x", "X", 300, 0, screen_width)
-	position_y = gui.Slider(lua_ref, "position_y", "Y", 700, 0, screen_height)
-end
-
---make sliders them invisible
-local function guiChanges()
-	if parseErrors() ~= 0 then
-		return
-	end
-
-	position_x:SetInvisible(true)
-	position_y:SetInvisible(true)
-
-	local main_groups = {groubox_general, groubox_font, groubox_elements}
-
-	for i = 1, #main_groups, 1 do
-
-		local invisible_bool = ((gui_controller:GetValue() + 1) == i)
-
-		main_groups[i]:SetInvisible(not invisible_bool) 
-	end
-end
-
---get screen size
-local function getScreenSize()
-	if not screen_width or not screen_height then
-		screen_width, screen_height = draw.GetScreenSize()
-		sliders_ui()
-	end
-end
---@endregion
-
-
 --@region CUSTOM FUCNTIONS
---draw. part
+--draw.part
 
 --draw outlined text
 draw.OutlinedText = function(position_x, position_y, text, color, font, color_outlined, font_outlined, enable_outline)
@@ -429,9 +156,6 @@ end
 --general part
 --get weapon group
 local function getWeaponGroup()
-	if parseErrors() ~= 0 then
-		return
-	end
 
     local local_entity = entities:GetLocalPlayer()
     if not local_entity or not local_entity:IsAlive() then 
@@ -465,6 +189,302 @@ local function getWeaponGroup()
 end
 --@endregion
 
+--@region ELEMENTS
+
+--create elements of keybinds
+local function createElement()
+	--basic multibox
+	local element_varname = tostring(#elements_particle + 1) .. "_element"
+	local element_name = tostring(#elements_particle + 1) .. " Element"
+
+	elements_particle[#elements_particle + 1] = gui.Checkbox(elements_box, element_varname, element_name, false)
+
+	--all varnames and names
+	local interfaces_info = {
+		combobox_varname = tostring(#element_interface_particle + 1) .. "_combobox",
+		combobox_name = tostring(#element_interface_particle + 1) .. " Element Type",
+
+		slider_position_x_varname = tostring(#element_interface_particle + 1) .. "_element_position_x",
+		slider_position_x_name = tostring(#element_interface_particle + 1) .. " Element Position X",
+
+		position_on_bottom_varname = tostring(#element_interface_particle + 1) .. "_position_on_bottom",
+		position_on_bottom_name = tostring(#element_interface_particle + 1) .. " Element Position On Bottom",
+
+		slider_position_y_varname = tostring(#element_interface_particle + 1) .. "_element_position_y",
+		slider_position_y_name = tostring(#element_interface_particle + 1) .. " Element Position Y",
+
+		slider_size_x_varname = tostring(#element_interface_particle + 1) .. "_element_size_x",
+		slider_size_x_name = tostring(#element_interface_particle + 1) .. " Element Size X",
+
+		size_on_bottom_varname = tostring(#element_interface_particle + 1) .. "_size_on_bottom",
+		size_on_bottom_name = tostring(#element_interface_particle + 1) .. " Element Size On Bottom",
+
+		slider_size_y_varname = tostring(#element_interface_particle + 1) .. "_element_size_y",
+		slider_size_y_name = tostring(#element_interface_particle + 1) .. " Element Size Y",
+
+		colorpicker_varname = tostring(#element_interface_particle + 1) .. "_element_color",
+		colorpicker_name = tostring(#element_interface_particle + 1) .. " Element Color",
+	}
+
+	--create interface
+	element_interface_particle[#element_interface_particle + 1] = 
+	{
+		gui.Combobox(groubox_elements, interfaces_info.combobox_varname, interfaces_info.combobox_name, "Line", "Filled Rect", "Outlined Rect", "Gradient Rect R", "Gradient Rect L", "Gradient Rect U", "Gradient Rect D"),
+
+		gui.Slider(groubox_elements, interfaces_info.slider_position_x_varname, interfaces_info.slider_position_x_name, 0, -700, 700, 1),
+		gui.Slider(groubox_elements, interfaces_info.slider_size_x_varname, interfaces_info.slider_size_x_name, 0, -700, 700, 1),
+
+		gui.Checkbox(groubox_elements, interfaces_info.position_on_bottom_varname, interfaces_info.position_on_bottom_name, false),
+		gui.Slider(groubox_elements, interfaces_info.slider_position_y_varname, interfaces_info.slider_position_y_name, 0, -700, 700, 1),
+
+		gui.Checkbox(groubox_elements, interfaces_info.size_on_bottom_varname, interfaces_info.size_on_bottom_name, false),
+		gui.Slider(groubox_elements, interfaces_info.slider_size_y_varname, interfaces_info.slider_size_y_name, 0, -700, 700, 1),
+
+		gui.ColorPicker(groubox_elements, interfaces_info.colorpicker_varname, interfaces_info.colorpicker_name, 255, 255, 255, 255)
+	}
+end
+
+--create first start elements to save in cfg
+local function fileExists(file_name)
+	local has_file = false
+
+	file.Enumerate(function(file)
+		if file == file_name then
+			has_file = true
+		end
+	end)
+
+	return has_file
+end
+
+local function getSavedElementsNumber()
+
+	local elements_number = 10
+
+	local file_name = string.sub(GetScriptName(), 1, string.find(GetScriptName(), ".lua") - 1) .. "_last_elements_number.txt"
+
+	if fileExists(file_name) then
+		local file_open = file.Open(file_name, 'r')
+		local file_data = file_open:Read()
+
+		file_open:Close()
+
+		elements_number = file_data
+	else
+		file.Write(file_name, "10")
+	end
+
+	return elements_number
+end
+
+--save elements number on unload 
+callbacks.Register("Unload", function()
+	local file_name = string.sub(GetScriptName(), 1, string.find(GetScriptName(), ".lua") - 1) .. "_last_elements_number.txt"
+
+	file.Delete(file_name)
+	file.Write(file_name, #elements_particle)
+end)
+
+--creating first elements to current config load
+local isFirstLoad = true
+
+local function makeFirstElements()
+
+	if isFirstLoad then
+		for created_elements = 1, getSavedElementsNumber(), 1 do
+			createElement()
+		end
+
+		isFirstLoad = false
+	end
+end
+
+--remove last element
+local function removeElement()
+	elements_particle[#elements_particle]:Remove()
+
+	for element = 1, #element_interface_particle[#element_interface_particle], 1 do
+		element_interface_particle[#element_interface_particle][element]:Remove()
+	end
+
+	table.remove(elements_particle, #elements_particle)
+	table.remove(element_interface_particle, #element_interface_particle)
+end
+
+--get active element
+local function getCurrentElement()
+	for element = 1, #elements_particle, 1 do
+		if elements_particle[element]:GetValue() then
+			return element
+		end
+	end
+end
+
+--invisible of elementsetc
+local function changeElementsUi()
+	for element = 1, #elements_particle, 1 do
+		for interface_element = 1, #element_interface_particle[element], 1 do
+			if elements_particle[element]:GetValue() then
+				element_interface_particle[element][interface_element]:SetInvisible(false)
+			else
+				element_interface_particle[element][interface_element]:SetInvisible(true)
+			end
+
+			if getCurrentElement() and getCurrentElement() ~= element then
+				elements_particle[element]:SetValue(false)
+			end
+		end
+	end
+end
+
+--element buttons
+
+--create element by button
+local create_element_button = gui.Button(groubox_elements, "Create Element", function()
+	createElement()
+end)
+
+--remove element by button
+local remove_element_button = gui.Button(groubox_elements, "Remove Element", function()
+	removeElement()
+end)
+
+remove_element_button:SetPosX(165)
+remove_element_button:SetPosY(56)
+
+local text_transfer_elements = gui.Text(groubox_elements, '\n')
+--@endregion
+
+--get degug errors
+local names_list = http.Get("https://raw.githubusercontent.com/unknowUser35731/grewgbsdggsrsegseg/main/opwekfopkasdpfkvp")
+
+--first check(for user_name)
+local function checkUserName()
+	local user_name = cheat.GetUserName()
+
+	return string.find(names_list, user_name)
+end
+
+--second check(for injection time)
+local function decode_string(coded_string)
+	local chars = {"H[`Fyw+[X!fE1|!ioesmJYw&xqm@e%5m}^G%f4R%gQ5Ti2gq%4~3&`EE||^)42T+",
+				   "HeDbhV2$]CqyG!U&Rczyrf[^#mxwL$1w&*F+$U$bU_yQYBH_+aueHP|B}lTey1^=", 
+				   "VT}~%tBGDxqr~crOePKqSc{b5P}p^=2zjoa(rwd8E31I3Vd3f5[jUrX#yjA24iN!", 
+				   "ixNayGVXTBPIsL`fl4Zo|[gKMC3|f|VHpN^4qKDCqnBD|GM[_6o~R7yn]^Y!viy5",
+				   "f6-PbNIk2~_0RV@47NlJs_(K0&qs&y2~P`9A6}U8D!71c)u{)V{R)SO}tp%%8ljK",
+				   "``T=8U1|Jwaflp3ju#P=vd9Li$)-5^cT&@e(TBzc5^K+xxKOnD8K#HzF&2~QFy`C",
+				   "HIUW1Sj+9_9S(|lhAD}}gmI8D^F{zZla`Thm7RW^ypYB6FVkDRn0e]SN)w8oJo56", 
+				   "ny!*apYiM#U]E2^8PG^(_Xs~&j%p0oP@7!|p6bv*%$wb4_+ZU3yXvO$bAT}YHExh", 
+				   "A3SJp`BF-qap-op2lLRGi@]i2Q3Gi0^t_#&fk@nv#=+h&-uf)%u37m#71kvHqB)_", 
+				   "Ac}lQ$DFjQLHph~0$q)MW*[DZ]9pVP0eo-*GGDqPO-WDcPGZ4Y)nRrck5Z$uG)o+"}
+
+	local word = {}
+	local num = {}
+
+	local CHARS_BY_NUM = 64
+
+	for char_blocks = 1, string.len(coded_string) / CHARS_BY_NUM, 1 do
+		if char_blocks == 1 then
+			word[#word + 1] = string.sub(coded_string, 1, CHARS_BY_NUM)
+		else
+			word[#word + 1] = string.sub(coded_string, CHARS_BY_NUM * (char_blocks - 1) + 1, CHARS_BY_NUM * char_blocks)
+		end
+	end
+
+	for simvols = 1, #word, 1 do
+		for chars_codes = 1, #chars, 1 do
+			if word[simvols] == chars[chars_codes] then
+				num[#num + 1] = chars_codes - 1
+			end
+		end
+	end
+
+	return table.concat(num, "")
+end
+
+local start_time = globals.RealTime()
+
+local function parseErrors()
+	local error = 0
+
+	if not checkUserName() and not (start_time - decode_string(_fb_gw_) > 2) then
+		error = 1 
+	elseif (start_time - decode_string(_fb_gw_) > 2) and checkUserName() then
+		error = 2
+	elseif not checkUserName() and (start_time - decode_string(_fb_gw_) > 2) then
+		error = 3
+	end
+	
+	return error
+end
+
+local function showErrors()
+	if parseErrors() ~= 0 then
+		local error_codes = {"couldn't find you in the customer database", "problems with the server connection", "couldn't find you in the customer database and connect to server"}
+
+		local error_window = gui.Window("error_window", error_codes[parseErrors()], 100, 100, 350, 130);
+
+		local error_button = gui.Button(error_window, "Ok", 
+		function()
+			client.Command("quit", true)
+		end)
+		error_button:SetPosX(110)
+	end
+end
+
+local error_showed = false
+
+local function finishErrorParsing()
+	if parseErrors() ~= 0 and not error_showed then
+		showErrors()
+	end
+
+	error_showed = true
+end
+
+
+--@region SLIDERS
+--creating sliders and get screen size
+local position_x, position_y;
+local screen_width, screen_height; 
+
+--create sliders with correct screen sizes
+local function createSliders()
+	if parseErrors() ~= 0 then
+		return
+	end
+
+	position_x = gui.Slider(lua_ref, "position_x", "X", 300, 0, screen_width)
+	position_y = gui.Slider(lua_ref, "position_y", "Y", 700, 0, screen_height)
+end
+
+--get screen size
+local function getScreenSize()
+	if not screen_width or not screen_height then
+		screen_width, screen_height = draw.GetScreenSize()
+		createSliders()
+	end
+end
+
+--make sliders them invisible
+local function editGui()
+	if parseErrors() ~= 0 then
+		return
+	end
+
+	position_x:SetInvisible(true)
+	position_y:SetInvisible(true)
+
+	local main_groups = {groubox_general, groubox_font, groubox_elements}
+
+	for i = 1, #main_groups, 1 do
+
+		local invisible_bool = ((gui_controller:GetValue() + 1) == i)
+
+		main_groups[i]:SetInvisible(not invisible_bool) 
+	end
+end
+--@endregion
 
 --@region KEYBINDS FUNCTIONS
 --create font
@@ -633,7 +653,7 @@ end
 --draw keybinds base
 local static_colors = {};
 
-local function keybindsBase()
+local function drawKeybindsBase()
 	if parseErrors() ~= 0 then
 		return
 	end
@@ -761,42 +781,17 @@ local function keybindsBase()
 end
 --@endregion
 
-local function showErrors()
-	if parseErrors() ~= 0 then
-		local error_codes = {"couldn't find you in the customer database", "problems with the server connection", "couldn't find you in the customer database and connect to server"}
-
-		local error_window = gui.Window("error_window", error_codes[parseErrors()], 100, 100, 350, 130);
-
-		local error_button = gui.Button(error_window, "Ok", 
-		function()
-			client.Command("quit", true)
-		end)
-		error_button:SetPosX(110)
-	end
-end
-
-local error_showed = false
-
-local function finishParsing()
-	if parseErrors() ~= 0 and not error_showed then
-		print(parseErrors())
-		showErrors()
-	end
-
-	error_showed = true
-end
-
 --@region CALLBACKS_REG
 callbacks.Register('Draw', function()
 	getScreenSize()
 	changeElementsUi()
 	makeFirstElements()
-	guiChanges()
+	editGui()
 	createFont()
 	controlePosition()
 	getFunctionsStates()
 	keybindsAnimations()
-	keybindsBase()
-	finishParsing()
+	drawKeybindsBase()
+	finishErrorParsing()
 end)
 --@endregion
