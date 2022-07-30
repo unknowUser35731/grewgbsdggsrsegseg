@@ -550,11 +550,11 @@ local function getFunctionsStates()
 	local slow_walk_enable = (gui.GetValue('rbot.accuracy.movement.slowkey') ~= 0 and input.IsButtonDown(gui.GetValue('rbot.accuracy.movement.slowkey')))
 	local third_person_enable = gui.GetValue('esp.local.thirdperson')
 	local fake_latancy_enable = (gui.GetValue('misc.fakelatency.enable') and (gui.GetValue('misc.fakelatency.amount') > 0))
-	local edje_jump_enable = (gui.GetValue('misc.edgejump') ~= 0 and input.IsButtonDown(gui.GetValue('misc.edgejump')))
+	local edge_jump_enable = (gui.GetValue('misc.edgejump') ~= 0 and input.IsButtonDown(gui.GetValue('misc.edgejump')))
 
 
 
-	enabled_functions = {double_tap_enable, hide_shots_enable, fake_duck_enable, slow_walk_enable, third_person_enable, fake_latancy_enable, edje_jump_enable}
+	enabled_functions = {double_tap_enable, hide_shots_enable, fake_duck_enable, slow_walk_enable, third_person_enable, fake_latancy_enable, edge_jump_enable}
 end
 --@endregion 
 
@@ -745,7 +745,7 @@ local function drawKeybindsBase()
 		----------------------------------------
 
 		--names for keybinds
-		local names_of_functions = {"double fire", "hide shots", "fake duck", "slow walk", "third person", "fake latency", "edje jump"}
+		local names_of_functions = {"double fire", "hide shots", "fake duck", "slow walk", "third person", "fake latency", "edge jump"}
 		local types_of_functions = {"[toggled]", "[toggled]", "[holding]", "[holding]", "[toggled]", "[toggled]", "[holding]"}
 
 		--draw all active features
